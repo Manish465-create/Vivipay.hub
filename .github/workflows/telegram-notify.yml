@@ -1,0 +1,15 @@
+name: Telegram Notify
+
+on: [push]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    environment: TELEGRAM_BOT_TOKEN
+    steps:
+      - name: Send Telegram Message
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: "Website repository updated: ${{ github.repository }} on branch ${{ github.ref_name }}"
